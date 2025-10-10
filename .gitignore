@@ -145,8 +145,8 @@ ehthumbs.db
 Thumbs.db
 
 # Project specific
-*.pdf
-*.csv
+#*.pdf
+#*.csv
 data/
 data-hub/
 *.pickle
