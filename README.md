@@ -34,6 +34,11 @@ pip install -r requirements.txt
 ```
 
 3. Ensure you have access to the required data files in your data hub directory.
+- **https://github.com/jcubb/fin-data** will create 4 necessary databases:
+- spdrfactors
+- sprtns
+- spsect
+- sp500_history
 
 ## Usage
 
