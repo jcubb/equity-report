@@ -16,7 +16,7 @@ warnings.filterwarnings("ignore")
 def main(argv=None):
     parser = argparse.ArgumentParser(description='Drop portfolio csv in directory, run fin-data, then this generates equity report.')
     parser.add_argument('--db', '-d', help='Path to data', default='C:\\Users\\gcubb\\OneDrive\\Python\\data-hub')
-    parser.add_argument('--pfile', '-d', help='Path to data', default='ComstockFund_24Q3.csv')
+    parser.add_argument('--pfile', '-p', help='Portfolio CSV file', default='ComstockFund_24Q3.csv')
     args = parser.parse_args(argv)
     data_db_root = args.db
     gcsv_file = args.pfile
@@ -85,7 +85,7 @@ def main(argv=None):
     attrib = olsgrp.attribution # attrib sums exactly to the weekly return for each stock
     rsqs = olsgrp.rsqs
 
-    # Things fail if don't have sector for every index security, so just drop them for now (sigh)
+    # Things lightly fail if don't have sector for every index security, so just drop them for now (sigh)
     # ~it is fine if there is missing sector info for portfolio securities - it just all goes to alpha
     yinfo_dropna = yinfo[(yinfo['Sector']!='N/A') & (yinfo.index.isin(sp500_index.index))]
     gfall = (
@@ -96,7 +96,6 @@ def main(argv=None):
         .merge(yinfo_dropna, left_index=True, right_index=True, how='inner')
         .assign(wgtsub=lambda x: x['wgt'] / x['wgt'].sum())
     )
-
 
     # Run an example of a portfolio report vs benchmark of the S&P500 ##
     #bwgts = yinfo['weight_07Oct2024']

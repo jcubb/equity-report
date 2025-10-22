@@ -138,11 +138,15 @@ def risk_model(data, halflife):
 
 def get_friday_returns(ydatin):
     # add in any missing days to ydat and set returns to zero
-    ydatall    = ydatin.resample('D').asfreq()
-    ydatall    = ydatall.fillna(0)
-    yroll      = ydatall.rolling(7).sum()
-    yfridatout = yroll[yroll.index.weekday==4] #4 is Friday
-    return yfridatout
+    return (
+        ydatin
+        .resample('D')
+        .asfreq()
+        .fillna(0)
+        .rolling(7)
+        .sum()
+        .loc[lambda x: x.index.weekday == 4]  # 4 is Friday
+    )
 
 def reindexZero(vec1, vec2):
     indunion = vec1.index.union(vec2.index)
