@@ -5,17 +5,20 @@ Created on Wed Nov 29 15:05:34 2023
 @author: gcubb
 """
 import numpy as np
-from numpy.linalg import lstsq
 from numba import njit
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 @njit
-def nb_ols(y,x):
-    pars = lstsq(x,y)[0]
-    pred = np.sum(x*pars,axis=1)
-    resid = y-pred
-    rsq = 1 - (np.sum(np.power(resid,2))/np.sum(np.power(y-np.mean(y),2)))
+def nb_ols(y, x):
+    xtx = x.T @ x
+    xty = x.T @ y
+    pars = np.linalg.solve(xtx, xty)
+    pred = x @ pars
+    resid = y - pred
+    ss_res = np.sum(resid * resid)
+    ss_tot = np.sum((y - np.mean(y)) ** 2)
+    rsq = 1.0 - ss_res / ss_tot
     return pars, rsq, resid, pred
 
 @njit
@@ -29,15 +32,19 @@ def nb_roll_2s_oos_ols(y, x1, x2, window):
     for i in range(x1.shape[0]-window):
         xx = x1[i:i+window]
         yy = y[i:i+window]
-        pars1[i] = lstsq(xx,yy)[0][1]
+        xtx1 = xx.T @ xx
+        xty1 = xx.T @ yy
+        pars1[i] = np.linalg.solve(xtx1, xty1)[1]
         step1impactoos[i] = x1[i+window,1]*pars1[i]
         yy_adj = xx[:,1]*pars1[i]
         yy2 = yy - yy_adj
         xx2 = x2[i:i+window]
-        pars2[i] = lstsq(xx2,yy2)[0]
+        xtx2 = xx2.T @ xx2
+        xty2 = xx2.T @ yy2
+        pars2[i] = np.linalg.solve(xtx2, xty2)
         step2impactoos[i] = x2[i+window]*pars2[i]
-        resid_2step = yy - np.sum(xx2*pars2[i],axis=1) - xx[:,1]*pars1[i]
-        rsqs[i] = 1 - (np.sum(np.power(resid_2step,2))/np.sum(np.power(yy-np.mean(yy),2)))
+        resid_2step = yy - xx2 @ pars2[i] - xx[:,1]*pars1[i]
+        rsqs[i] = 1 - (np.sum(resid_2step * resid_2step)/np.sum((yy-np.mean(yy))**2))
     return pars1, pars2, rsqs, step1impactoos, step2impactoos
 
 
