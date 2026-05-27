@@ -64,15 +64,12 @@ class FastOLS:
         else:
             x_pd = x.copy()
         common_index = y_pd.index.intersection(x_pd.index)
-        y_pd = y_pd.loc[common_index]
-        y_arr = y_pd.to_numpy()
-        x_arr = x_pd.loc[common_index]
-        x_arr = x_arr.to_numpy()
-        x_arr = np.insert(x_arr,0,1,axis=1)
+        y_pd       = y_pd.loc[common_index]
         self.y     = y_pd
-        self.y_arr = y_arr
+        self.y_arr = y_pd.to_numpy()
         self.x     = x_pd.loc[common_index]
-        self.x_arr = x_arr
+        x_arr      = self.x.to_numpy()
+        self.x_arr = np.insert(x_arr,0,1,axis=1)
     @property
     def pars(self):
         return self.results[0]
