@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- `equity_reglib.py` is now a thin shim that re-exports from the
+  [fast-regression](https://github.com/jcubb/fast-regression) package, added to
+  `requirements.txt` as a git dependency. The public API is unchanged — same names,
+  same signatures, same properties.
+- Scaffold placeholder URLs in `README.md` and `setup.py` now point at the real
+  repository; `setup.py`'s Documentation link used `blob/main` on a repo whose default
+  branch is `master`.
+
+### Fixed
+Picked up from upstream, none of which this repo's vendored copy had:
+- **Threading now does something.** `@njit` does not release the GIL.
+  `GroupFastRolling2sOOSOLS` fans out over ten worker threads and without
+  `nogil=True` measured **0.98x** — ten threads doing nothing at all. Now 2.07x on
+  the same workload.
+- **Rank-deficient designs no longer return silent garbage.** `np.linalg.solve` does
+  not detect rank deficiency; every solve site upstream is guarded by a
+  tolerance-checked Cholesky.
+- **~1.3x on the rolling kernels** from memory layout: a homogeneous float
+  DataFrame's `.to_numpy()` is Fortran-ordered and `np.insert` preserves that, which
+  made every rolling row slice non-contiguous. Designs are built C-ordered now.
+- `FastOLS.cleanVars` re-aligned indexes on every call even when there was nothing to
+  align.
+- A dead `isinstance(y, pd.DataFrame)` branch meant a DataFrame `y` reached the kernel
+  as a 2-D array.
+
+### Note on behaviour
+`nb_ols` now raises `numpy.linalg.LinAlgError` on a rank-deficient design rather than
+returning silent garbage. Inside `GroupFastRolling2sOOSOLS` this is caught per column,
+so an affected ticker is **absent** from `.results` rather than present-and-wrong. That
+is the better failure, but it is a visible change, and it is swallowed unless you pass
+`verbose=True`.
+
 ## [1.0.0] - 2025-10-09
 
 ### Added
