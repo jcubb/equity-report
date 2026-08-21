@@ -7,3 +7,7 @@ adjustText>=0.7.3
 numba>=0.56.0
 openpyxl>=3.0.9
 xlrd>=2.0.0
+
+# Regression kernels (equity_reglib re-exports from this). Public repo, so a plain
+# `pip install -r requirements.txt` works on a fresh clone with no credentials.
+fast-regression @ git+https://github.com/jcubb/fast-regression.git

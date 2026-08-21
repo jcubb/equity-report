@@ -114,7 +114,7 @@ Key parameters can be modified in the script:
 equity-report/
 ├── factor_reg.py          # Main analysis script
 ├── equity_risklib.py      # Risk and attribution analysis classes
-├── equity_reglib.py       # Fast regression implementations
+├── equity_reglib.py       # Shim re-exporting github.com/jcubb/fast-regression
 ├── chartlib.py            # Plotting utilities
 ├── requirements.txt       # Python dependencies
 ├── README.md             # This file
