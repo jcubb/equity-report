@@ -14,7 +14,7 @@ setup(
     description="A comprehensive equity factor attribution and risk analysis tool",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/equity-report",
+    url="https://github.com/jcubb/equity-report",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -38,8 +38,9 @@ setup(
     },
     keywords="finance, portfolio, attribution, risk, factor, regression, equity",
     project_urls={
-        "Bug Reports": "https://github.com/yourusername/equity-report/issues",
-        "Source": "https://github.com/yourusername/equity-report/",
-        "Documentation": "https://github.com/yourusername/equity-report/blob/main/README.md",
+        "Bug Reports": "https://github.com/jcubb/equity-report/issues",
+        "Source": "https://github.com/jcubb/equity-report/",
+        # branch is master, not main -- blob/main here was a dead link
+        "Documentation": "https://github.com/jcubb/equity-report/blob/master/README.md",
     },
 )

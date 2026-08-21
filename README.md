@@ -24,7 +24,7 @@ The analysis uses the following factor exposures:
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/yourusername/equity-report.git
+git clone https://github.com/jcubb/equity-report.git
 cd equity-report
 ```
 
